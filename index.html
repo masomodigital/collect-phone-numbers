@@ -1,94 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Add Contact</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-    }
-    .container {
-      max-width: 400px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
-      margin: auto;
-    }
-    h2 {
-      text-align: center;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #218838;
-    }
-    .message {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-    }
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+    .container { max-width: 400px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); margin: auto; }
+    h2 { text-align: center; }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; }
+    button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #218838; }
+    .message { margin-top: 15px; text-align: center; font-weight: bold; }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Add Contact</h2>
+    <form id="contactForm">
+      <input type="text" id="userId" name="userId" placeholder="User ID / National ID" required />
+      <input type="text" id="name" name="name" placeholder="Your Name" required />
+      <input type="text" id="phone" name="phone" placeholder="Phone Number" required />
+      <button type="submit">Submit</button>
+    </form>
+    <div id="message" class="message"></div>
+  </div>
 
-<div class="container">
-  <h2>Add Contact</h2>
-  <form id="contactForm">
-    <input type="text" id="userId" name="userId" placeholder="User ID / National ID" required>
-    <input type="text" id="name" name="name" placeholder="Your Name" required>
-    <input type="text" id="phone" name="phone" placeholder="Phone Number" required>
-    <button type="submit">Submit</button>
-  </form>
-  <div id="message" class="message"></div>
-</div>
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-<script>
-document.getElementById("contactForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+      const formData = new FormData(this);
+      const messageDiv = document.getElementById("message");
+      messageDiv.innerText = "Submitting...";
+      messageDiv.style.color = "black";
 
-  const formData = new FormData(this);
-
-  document.getElementById("message").innerText = "Submitting...";
-  document.getElementById("message").style.color = "black";
-
-  fetch("https://script.google.com/macros/s/AKfycbxoRsOJaNtcyh7n52A8FXNhJNIvE1hDEjYCjEds1ZKOPV_t0aukWJeOztltK2GxoZs/exec", {
-    method: "POST",
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      document.getElementById("message").style.color = "green";
-      document.getElementById("message").innerText = data.message;
-      document.getElementById("contactForm").reset();
-    } else {
-      document.getElementById("message").style.color = "red";
-      document.getElementById("message").innerText = data.message;
-    }
-  })
-  .catch(err => {
-    document.getElementById("message").style.color = "red";
-    document.getElementById("message").innerText = "Error submitting form.";
-    console.error(err);
-  });
-});
-</script>
-
+      fetch("https://script.google.com/macros/s/AKfycbxoRsOJaNtcyh7n52A8FXNhJNIvE1hDEjYCjEds1ZKOPV_t0aukWJeOztltK2GxoZs/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          messageDiv.style.color = "green";
+          messageDiv.innerText = data.message;
+          this.reset();
+        } else {
+          messageDiv.style.color = "red";
+          messageDiv.innerText = data.message;
+        }
+      })
+      .catch(err => {
+        messageDiv.style.color = "red";
+        messageDiv.innerText = "Error submitting form.";
+        console.error(err);
+      });
+    });
+  </script>
 </body>
 </html>
+
