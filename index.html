@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Contact</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Add Contact</h2>
+  <form id="contactForm">
+    <input type="text" id="userId" placeholder="User ID / National ID" required>
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="text" id="phone" placeholder="Phone Number" required>
+    <button type="submit">Submit</button>
+  </form>
+  <div id="message" class="message"></div>
+</div>
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const userId = document.getElementById("userId").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+
+  document.getElementById("message").innerText = "Submitting...";
+
+  fetch("https://script.google.com/macros/s/AKfycbxoRsOJaNtcyh7n52A8FXNhJNIvE1hDEjYCjEds1ZKOPV_t0aukWJeOztltK2GxoZs/exec", {
+    method: "POST",
+    body: JSON.stringify({ userId, name, phone })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById("message").style.color = "green";
+      document.getElementById("message").innerText = data.message;
+      document.getElementById("contactForm").reset();
+    } else {
+      document.getElementById("message").style.color = "red";
+      document.getElementById("message").innerText = data.message;
+    }
+  })
+  .catch(err => {
+    document.getElementById("message").style.color = "red";
+    document.getElementById("message").innerText = "Error submitting form.";
+    console.error(err);
+  });
+});
+</script>
+
+</body>
+</html>
