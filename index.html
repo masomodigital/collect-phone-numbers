@@ -50,9 +50,9 @@
 <div class="container">
   <h2>Add Contact</h2>
   <form id="contactForm">
-    <input type="text" id="userId" placeholder="User ID / National ID" required>
-    <input type="text" id="name" placeholder="Your Name" required>
-    <input type="text" id="phone" placeholder="Phone Number" required>
+    <input type="text" id="userId" name="userId" placeholder="User ID / National ID" required>
+    <input type="text" id="name" name="name" placeholder="Your Name" required>
+    <input type="text" id="phone" name="phone" placeholder="Phone Number" required>
     <button type="submit">Submit</button>
   </form>
   <div id="message" class="message"></div>
@@ -62,15 +62,14 @@
 document.getElementById("contactForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
-  const userId = document.getElementById("userId").value.trim();
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
+  const formData = new FormData(this);
 
   document.getElementById("message").innerText = "Submitting...";
+  document.getElementById("message").style.color = "black";
 
   fetch("https://script.google.com/macros/s/AKfycbxoRsOJaNtcyh7n52A8FXNhJNIvE1hDEjYCjEds1ZKOPV_t0aukWJeOztltK2GxoZs/exec", {
     method: "POST",
-    body: JSON.stringify({ userId, name, phone })
+    body: formData
   })
   .then(response => response.json())
   .then(data => {
