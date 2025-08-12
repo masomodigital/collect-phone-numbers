@@ -5,13 +5,95 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Add Contact (Masomo) — Frontend</title>
   <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 24px; max-width: 680px; margin: auto; }
-    label { display:block; margin-top:12px; font-weight:600; }
-    input[type="text"], input[type="tel"] { width:100%; padding:10px; margin-top:6px; box-sizing:border-box; }
-    button { margin-top:16px; padding:10px 14px; font-size:16px; border-radius:8px; cursor:pointer; }
-    .ok { color: #064e3b; background: #bbf7d0; padding:10px; border-radius:6px; margin-top:12px; }
-    .err { color: #7f1d1d; background:#fecaca; padding:10px; border-radius:6px; margin-top:12px; }
-    .note { margin-top:8px; font-size:0.9em; color:#374151; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      padding: 24px;
+      max-width: 680px;
+      margin: auto;
+      background: #f0f9ff;
+      color: #1e293b;
+    }
+    h1 {
+      color: #0c4a6e;
+      text-align: center;
+      margin-bottom: 0.2em;
+    }
+    p {
+      font-size: 1.05em;
+      color: #334155;
+      margin-bottom: 1.2em;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 700;
+      color: #0369a1;
+    }
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      box-sizing: border-box;
+      border: 2px solid #7dd3fc;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="tel"]:focus {
+      outline: none;
+      border-color: #0284c7;
+      background: #e0f2fe;
+    }
+    button {
+      margin-top: 24px;
+      padding: 12px 20px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #0284c7;
+      color: white;
+      border: none;
+      width: 100%;
+      font-weight: 700;
+      box-shadow: 0 4px 8px rgb(2 132 199 / 0.3);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      background: #0369a1;
+      box-shadow: 0 6px 12px rgb(3 105 161 / 0.5);
+    }
+    .ok {
+      color: #065f46;
+      background: #bbf7d0;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgb(6 95 70 / 0.3);
+    }
+    .err {
+      color: #991b1b;
+      background: #fecaca;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgb(153 27 27 / 0.3);
+    }
+    .note {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #475569;
+      text-align: center;
+      user-select: all;
+    }
+    code {
+      background: #e0e7ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
   </style>
 </head>
 <body>
@@ -63,7 +145,6 @@
           body: JSON.stringify(payload)
         });
 
-        // If the server returns non-JSON or blocked by CORS, this will throw
         const data = await resp.json();
 
         if (!resp.ok) {
@@ -81,7 +162,6 @@
           showMessage((data && data.error) ? data.error : "Failed to add contact", true);
         }
       } catch (err) {
-        // Common cause: CORS or network / wrong URL
         showMessage("Request failed: " + err.message + ". Check the WEB_APP_URL, network and CORS settings.", true);
       }
     }
@@ -93,12 +173,11 @@
 
       if (!nationalId) return showMessage("National ID is required", true);
       if (!name) return showMessage("Name is required", true);
-      if (!phone) return showMessage("Phone is required", true);
+      if (!/^\d{10}$/.test(phone)) return showMessage("Phone number must be exactly 10 digits (numbers only)", true);
 
       showMessage("Sending...", false);
       addContact(nationalId, name, phone);
     });
-
   </script>
 </body>
 </html>
